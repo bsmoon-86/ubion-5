@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+    <div>
+        <canvas id="myChart"></canvas>
+    </div>
+    <table class="table">
+        <tr>
+            <th>index</th>
+            <th>등록일시</th>
+            <th>일일 확진자</th>
+            <th>일일 사망자</th>
+        </tr>
+        {%for i in range(0, cnt, 1)%}
+            <tr>
+                <td>{{i+1}}</td>
+                <td>{{date_list[i]}}</td>
+                <td>{{decide_data[i]}}</td>
+                <td>{{death_data[i]}}</td>
+            </tr>
+        {%endfor%}
+    </table>
+    <script>
+        const labels = {{date_list | tojson}};
+      
+        const data = {
+          labels: labels,
+          datasets: [{
+            label: '일일확진자',
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: {{decide_data | tojson}},
+          }, {
+            label: '일일사망자',
+            backgroundColor: 'rgb(0, 99, 0)',
+            borderColor: 'rgb(0, 99, 0)',
+            data: {{death_data | tojson}},
+          }]
+        };
+      
+        const config = {
+          type: 'line',
+          data: data,
+          options: {}
+        };
+      </script>
+      <script>
+        const myChart = new Chart(
+          document.getElementById('myChart'),
+          config
+        );
+      </script>
+</body>
+</html>

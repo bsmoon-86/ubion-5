@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect
+import pandas as pd
 
 # Flask라는 Class에서 __init__ 함수에 self를 제외한 매개변수 1개
 # __name__ : 자기 자신의 파일의 이름
@@ -50,6 +51,30 @@ def third():
                             content=_content, 
                             title=_title
                             )
+
+@app.route("/dashboard")
+def dashboard():
+    print("dashboard")
+    df = pd.read_csv("../csv/corona.csv")
+    # 컬럼의 이름을 변경
+    df.columns = ["인덱스", "등록일시", "사망자", "확진자", 
+                    "게시글번호", "기준일", "기준시간", "수정일시", 
+                    "누적의심자", "누적확진률"]
+    # 등록일시를 기준으로 오름차순 정렬
+    df.sort_values("등록일시", inplace=True)
+    # 일일확진자, 일일사망자 라는 파생변수 생성
+    df["일일확진자"] = df["확진자"] - df["확진자"].shift()
+    df["일일사망자"] = df["사망자"].diff()
+    data = df.head(10)
+    _cnt = len(data)
+    _decide_data = data["일일확진자"].tolist()
+    _date_list = data["등록일시"].tolist()
+    _death_data = data["일일사망자"].tolist()
+
+    return render_template("dashboard.html", cnt = _cnt, 
+                            date_list= _date_list, 
+                            decide_data = _decide_data, 
+                            death_data = _death_data)
 
 
 # Flask라는 Class 안에 있는 run()이라는 함수 호출
