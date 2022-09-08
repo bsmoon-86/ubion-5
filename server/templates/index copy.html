@@ -67,17 +67,22 @@
       <div class="table-responsive">
         <table class="table table-striped table-sm">
           <thead>
+            <tr>
+              {%for i in range(0, c_cnt,1)%}
               <!-- 
                 columns 데이터형 list형태 
                 python for문 
                 for col in [5,3,6,2] -> 리스트의 개수 반복
                 col이라는 변수에는 5, 3, 6, 2
               -->
-            <tr>
+              <th scope="col">{{columns[i]}}</th>
+              {%endfor%}
+            </tr>
+            <!-- <tr>
               {%for col in columns%}
               <th>{{col}}</th>
               {%endfor%}
-            </tr>
+            </tr> -->
           </thead>
           <tbody>
             <!-- 
@@ -119,8 +124,8 @@
           labels: labels,
           datasets: [{
             label: '',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
+            backgroundColor: 'rgb(0, 99, 0)',
+            borderColor: 'rgb(0, 99, 0)',
             data: {{y_pos | tojson}},
           }]
         };
