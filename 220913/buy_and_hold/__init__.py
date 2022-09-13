@@ -1,4 +1,3 @@
-import pandas as pd
 import numpy as np
 
 class buyandhold():
@@ -20,8 +19,9 @@ class buyandhold():
         self.daily_drawdown = self.df[self.col]/self.historical_max - 1.0
         self.historical_min = self.daily_drawdown.cummin()
         self.last_date = self.df.index[-1]
-        self.CAGR = self.df[self.last_date, 'st_rtn'] ** (252/len(self.df)) - 1
-        self.sharpe = np.mean(self.df["daily_rtn"]) / np.std(self.df["daily_rtn"]) * np.sqrt(252)
+        self.CAGR = self.df.loc[self.last_date, 'st_rtn'] ** (252/len(self.df)) - 1
+        self.sharpe = np.mean(self.df["daily_rtn"]) / np.std(self.df["daily_rtn"])\
+             * np.sqrt(252)
         self.VOL = np.std(self.df["daily_rtn"]) * np.sqrt(252)
         self.MDD = self.historical_min.min()
         return [self.CAGR, self.sharpe, self.VOL, self.MDD]
