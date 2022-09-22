@@ -132,9 +132,58 @@ View(list_job)
 # 상위 10개를 출력
 # 시각화
 
+## 두개의 데이터프레임 결합 
+## left_join( 데이터프레임명1, 데이터프레임명2, by="공통되는 컬럼명" )
+join_data = left_join(welfare, list_job, by="code_job")
+table(join_data$job)
+
+table(is.na(join_data$job))
+
+## 결측치를 제거해야되는 컬럼 (job, income)
+job_income = join_data %>% 
+  filter(!is.na(job) & !is.na(income)) %>% 
+  group_by(job) %>% 
+  summarise(mean_income = mean(income))
+View(job_income)
+
+## 상위 10개만 출력
+## 월급을 기준으로 내림차순 정렬
+## 데이터의 시작부터 10개를 출력
+job_income = job_income %>% 
+  arrange(desc(mean_income)) %>% 
+  head(10)
+job_income
+
+# 시각화
+ggplot(data=job_income, aes(x = job, y = mean_income)) +
+  geom_col()
+
+ggplot(data=job_income, aes(x = reorder(job, -mean_income), 
+                            y = mean_income)) +
+  geom_col()
+
+top10 = ggplot(data=job_income, aes(x = reorder(job, mean_income), 
+                            y = mean_income)) +
+  geom_col() + coord_flip()
+
+## plotly 패키지 설치
+install.packages("plotly")
+library(plotly)
+ggplotly(top10)
 
 
+## dygraghs -> 시계열데이터를 시각화
+install.packages("dygraphs")
+library(dygraphs)
+
+economics = ggplot2::economics
 
 
+## xts 데이터 타입 변경( 시계열 변경 )
+library(xts)
+eco = xts(economics$unemploy, order.by =economics$date)
+head(eco, 3)
+
+dygraph(eco) %>% dyRangeSelector()
 
 
