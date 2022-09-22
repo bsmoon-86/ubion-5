@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <p>main page</p>
+    <div>
+        <canvas id="myChart"></canvas>
+    </div>
+    <table>
+        <!-- 
+            sales : [
+                {
+                    Region : xxxxx, 
+                    Country : yyyyy, 
+                    Total Cost : 11111
+                }, 
+                {
+                    Region : aaaaa, 
+                    Country : bbbbb, 
+                    Total Cost : 11111
+                }
+            ]
+            sales[0] -> {
+                Region : xxxxx, 
+                Country : yyyyy, 
+                Total Cost : 11111
+            }
+            sales[0]["Region"] -> xxxxx
+         -->
+        <tr>
+            <th>No</th>
+            <th>Region</th>
+            <th>AVG_Cost</th>
+        </tr>
+        {% 
+            for i in range(0, cnt, 1)  
+        %}
+        <tr>
+            <td>{{i+1}}</td>
+            <td>{{sales[i]["Region"]}}</td>
+            <td>{{sales[i]["AVG_Cost"]}}</td>
+        </tr>
+        {%endfor%}
+    </table>
+    <script>
+        const labels = {{region | tojson}};
+        
+        const data = {
+            labels: labels,
+            datasets: [{
+            label: 'My First dataset',
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: {{avg | tojson}},
+            }]
+        };
+        
+        const config = {
+            type: 'line',
+            data: data,
+            options: {}
+        };
+    </script>
+    <script>
+        const myChart = new Chart(
+          document.getElementById('myChart'),
+          config
+        );
+    </script>
+</body>
+</html>
